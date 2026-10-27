@@ -1,0 +1,21 @@
+.st-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 860px) { .st-grid { grid-template-columns: minmax(0, 1fr); } }
+.st-input { min-height: 150px; }
+.st-left { gap: 14px; }
+.st-p { margin: 0; }
+.st-p:empty { display: none; }
+.st-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.st-stats .stat { padding: 10px 12px; container-type: inline-size; }
+.st-stats .stat b { font-size: min(21px, 15cqi); overflow-wrap: anywhere; }
+.st-stats .stat:first-child { background: var(--accent-soft); border-color: transparent; }
+.st-stats .stat:first-child b { color: var(--accent); }
+@media (max-width: 520px) { .st-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.st-kv th { text-transform: none; letter-spacing: 0; font-size: 13px; color: var(--text-2); font-weight: 500; }
+.st-kv td.num, .tbl .num { text-align: right; overflow-wrap: anywhere; }
+.st-kv tr:last-child th, .st-kv tr:last-child td { border-bottom: 0; }
+.st-chart { display: block; width: 100%; height: 240px; margin-top: 6px; }
+.st-box { height: 160px; }
+.st-scroll { max-height: 380px; overflow: auto; }
+.st-scroll th { position: sticky; top: 0; background: var(--surface); z-index: 1; }
+.st-out td { background: color-mix(in srgb, var(--warn) 9%, transparent); }
+.st-tables { align-items: start; }

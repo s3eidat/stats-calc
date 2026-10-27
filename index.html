@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self' data: blob:; connect-src 'self' data: blob:; worker-src 'self' blob:; manifest-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Stats Calc — Free Mean, Median, Standard Deviation Calculator | S3eidat Tools</title>
+<meta name="description" content="Paste numbers and get mean, median, mode, variance, sample and population standard deviation, quartiles, IQR, outliers, z-scores, a frequency table, histogram and box plot. Free and private.">
+<meta property="og:title" content="Stats Calc — free, private descriptive statistics">
+<meta property="og:description" content="Mean, median, SD, quartiles, outliers, histogram and box plot. Runs 100% in your browser.">
+<link rel="icon" href="kit/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="kit/kit.css">
+<link rel="stylesheet" href="app.css">
+<script src="kit/kit.js"></script>
+<!--s3:seo-->
+<link rel="canonical" href="https://s3eidat.github.io/stats-calc/">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d0f12">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="S3eidat Tools">
+<meta property="og:url" content="https://s3eidat.github.io/stats-calc/">
+<meta property="og:image" content="https://s3eidat.github.io/stats-calc/screenshot.png">
+<meta property="og:image:width" content="1280"><meta property="og:image:height" content="800">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Stats Calc — Mean, median, standard deviation and more">
+<meta name="twitter:description" content="Mean, median, standard deviation and more. Free, private and runs 100% in your browser: no sign-up, no uploads.">
+<meta name="twitter:image" content="https://s3eidat.github.io/stats-calc/screenshot.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Stats Calc", "url": "https://s3eidat.github.io/stats-calc/", "description": "Mean, median, standard deviation and more. Free, private and runs 100% in your browser: no sign-up, no uploads.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any (web browser)", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "image": "https://s3eidat.github.io/stats-calc/screenshot.png", "author": {"@type": "Person", "name": "s3eidat", "url": "https://github.com/s3eidat"}}</script>
+<!--/s3:seo-->
+</head>
+<body data-tool="stats-calc">
+<main class="s3-main">
+  <section class="s3-hero">
+    <h1>Stats Calc</h1>
+    <p>Paste numbers in any format, or a column straight from a spreadsheet, and get the full descriptive statistics with a histogram, a box plot and z-scores.</p>
+  </section>
+
+  <div class="st-grid">
+    <div class="stack st-left">
+    <section class="card stack">
+      <div class="row between">
+        <h2>Data</h2>
+        <div class="row">
+          <button class="btn ghost small" type="button" id="sample">Sample</button>
+          <label class="btn ghost small" id="open">Open .csv<input type="file" accept=".csv,.txt,.tsv,text/plain,text/csv" hidden></label>
+          <button class="btn ghost small" type="button" id="clear"><svg class="i"><use href="#i-trash"/></svg>Clear</button>
+        </div>
+      </div>
+      <label for="input" class="sr">Numbers</label>
+      <textarea class="textarea st-input" id="input" spellcheck="false" placeholder="2, 4, 4, 4, 5, 5, 7, 9&#10;or one number per line"></textarea>
+      <div class="grid-2">
+        <label class="field">Commas
+          <select class="select" id="commas">
+            <option value="sep">separate values (1, 2, 3)</option>
+            <option value="thou">are thousands separators (1,234)</option>
+            <option value="dec">are decimal commas (1,5)</option>
+          </select>
+        </label>
+        <label class="field">Quartile method
+          <select class="select" id="qmethod">
+            <option value="inc">Inclusive (Excel QUARTILE.INC, R type 7)</option>
+            <option value="exc">Exclusive (Excel QUARTILE.EXC, R type 6)</option>
+            <option value="tukey">Median of halves (TI calculators)</option>
+          </select>
+        </label>
+      </div>
+      <p class="faint st-p" id="parseInfo"></p>
+    </section>
+      <section class="card">
+        <div class="row between"><h2>Histogram</h2><span class="faint" id="binInfo"></span></div>
+        <canvas class="st-chart" id="hist" role="img" aria-label="Histogram of the data"></canvas>
+      </section>
+      <section class="card">
+        <div class="row between"><h2>Box plot</h2><span class="faint">whiskers to 1.5 × IQR</span></div>
+        <canvas class="st-chart st-box" id="box" role="img" aria-label="Box plot of the data"></canvas>
+      </section>
+    </div>
+
+    <section class="card stack">
+      <div class="row between">
+        <h2>Summary</h2>
+        <button class="btn small" type="button" id="copy"><svg class="i"><use href="#i-copy"/></svg>Copy summary</button>
+      </div>
+      <div class="stats st-stats" id="stats"></div>
+      <div class="tbl-wrap"><table class="tbl st-kv" id="kv"></table></div>
+    </section>
+  </div>
+
+  <div class="grid-2 mt st-tables">
+    <section class="card">
+      <div class="row between">
+        <h2>Frequency table</h2>
+        <button class="btn ghost small" type="button" id="freqCsv"><svg class="i"><use href="#i-download"/></svg>CSV</button>
+      </div>
+      <div class="tbl-wrap st-scroll"><table class="tbl" id="freq"></table></div>
+    </section>
+    <section class="card">
+      <div class="row between">
+        <h2>z-scores <small>using the sample SD</small></h2>
+        <button class="btn ghost small" type="button" id="zCsv"><svg class="i"><use href="#i-download"/></svg>CSV</button>
+      </div>
+      <div class="tbl-wrap st-scroll"><table class="tbl" id="z"></table></div>
+    </section>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
